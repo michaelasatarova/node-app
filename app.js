@@ -1,9 +1,20 @@
 let express = require('express');
+let session = require('express-session');
 const app = express()
+
+let sessionOptions = session({
+    secret: "Javascript is cool",
+    resave: false,
+    saveUninitialized: false,
+    cookie:{
+        maxAge: 1000 * 60 *60*24, 
+        httpOnly:true
+    }
+})
 
 const router = require('./router');
 
-
+qpp.use(sessionOptions)
 app.use(express.urlencoded({extended:false}))
 app.use(express.json())
 
@@ -16,5 +27,5 @@ app.set('view engine', 'ejs')
 
 
 app.use('/', router)
-
-app.listen(3000);
+//totot spojenie mame v db.js ze pocuva na ktorom porte
+module.exports = app
