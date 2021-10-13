@@ -1,6 +1,7 @@
 //this exports mongo db client
 const postsCollection = require('../db').db().collection("posts")
 const ObjectID = require('mongodb').ObjectID
+const User = require('./User')
 
 let Post = function (data, userid) {
   this.data = data
@@ -48,7 +49,7 @@ Post.prototype.create = function () {
 }
 
 //get single daata post from db
-Post.findSingleById = function(id){
+/* Post.findSingleById = function(id){
   return new Promise(async function(resolve, reject){
     //it has to be included because od injection attack
     if(typeof(id) !="string" || !ObjectID .isValid(id)){
@@ -60,6 +61,46 @@ Post.findSingleById = function(id){
     if(post){
       resolve(post)
     }else{
+      reject()
+    }
+  })
+} */
+
+//get single nested data post from db , we cal look one level deeper
+Post.findSingleById = function(id) {
+  return new Promise(async function(resolve, reject) {
+    if (typeof(id) != "string" || !ObjectID.isValid(id)) {
+      reject()
+      return
+    }
+    //get data
+    let posts = await postsCollection.aggregate([
+      {$match: {_id: new ObjectID(id)}},
+      //users is collections
+      {$lookup: {from: "users", localField: "author", foreignField: "_id", as: "authorDocument"}},
+     //here you can define which data you want to return 1=true
+      {$project: {
+        title: 1,
+        body: 1,
+        createdDate: 1,
+        author: {$arrayElemAt: ["$authorDocument", 0]}
+      }}
+    ]).toArray()
+
+    // clean up author property in each post object
+    posts = posts.map(function(post) {
+      post.author = {
+        username: post.author.username,
+        avatar: new User(post.author, true).avatar
+      }
+
+      return post
+    })
+
+    if (posts.length) {
+      console.log(posts[0])
+      resolve(posts[0])
+    } else {
       reject()
     }
   })
