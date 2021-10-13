@@ -47,4 +47,22 @@ Post.prototype.create = function () {
   })
 }
 
+//get single daata post from db
+Post.findSingleById = function(id){
+  return new Promise(async function(resolve, reject){
+    //it has to be included because od injection attack
+    if(typeof(id) !="string" || !ObjectID .isValid(id)){
+      reject()
+      return
+    }
+    //getting data
+    let post = await postsCollection.findOne({_id: new ObjectID(id)})
+    if(post){
+      resolve(post)
+    }else{
+      reject()
+    }
+  })
+}
+
 module.exports = Post

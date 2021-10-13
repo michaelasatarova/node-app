@@ -1,0 +1,4 @@
+1.) run npm i
+2.) include .env
+RUN
+3.) npm run watch
