@@ -1,10 +1,13 @@
-let express = require('express');
-let session = require('express-session');
+const express = require('express');
+const session = require('express-session');
+const MongoStore = require ('connect-mongo');
+const flash = require('connect-flash')
 const app = express()
 
 let sessionOptions = session({
     secret: "Javascript is cool",
     resave: false,
+    store: MongoStore.create({client: require('./db')}),
     saveUninitialized: false,
     cookie:{
         maxAge: 1000 * 60 *60*24, 
@@ -14,9 +17,16 @@ let sessionOptions = session({
 
 const router = require('./router');
 
-qpp.use(sessionOptions)
+app.use(sessionOptions)
+app.use(flash())
 app.use(express.urlencoded({extended:false}))
 app.use(express.json())
+
+app.use(function(req, res, next){
+    res.locals.user = req.session.user
+    next()
+})
+
 
 //sem nastviš folder kde su uložene všetky tvoje css img a ine subory
 app.use(express.static('public'))
