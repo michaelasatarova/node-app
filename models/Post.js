@@ -29,15 +29,15 @@ Post.prototype.validate = function() {
 }
 
 Post.prototype.create = function() {
-  return new Promise((resolve, reject) => {
-    this.cleanUp()
+  return new Promise(async(resolve, reject) => {
+     this.cleanUp() 
     this.validate()
     if (!this.errors.length) {
       // save post into database
-      postsCollection.insertOne(this.data).then((info) => {
-        resolve(info.ops[0]._id)
+      await postsCollection.insertOne(this.data).then((info) => {
+        resolve(info)
       }).catch(() => {
-        this.errors.push("Please try again later.")
+        this.errors.push("Please try again later.Post")
         reject(this.errors)
       })
     } else {
@@ -120,7 +120,6 @@ Post.findSingleById = function(id, visitorId) {
     ], visitorId)
 
     if (posts.length) {
-      console.log(posts[0])
       resolve(posts[0])
     } else {
       reject()
@@ -135,16 +134,17 @@ Post.findByAuthorId = function(authorId) {
   ])
 }
 
-Post.delete = function(postIdToDelete, currentUserId){
-  return new Promise(async (resolve, reject) =>{
-    try{
+Post.delete = function(postIdToDelete, currentUserId) {
+  return new Promise(async (resolve, reject) => {
+    try {
       let post = await Post.findSingleById(postIdToDelete, currentUserId)
-      if(post.isVisitorOwner){
-        await postsCollection.deleteOne({_id:new ObjectID(postIdToDelete)})
-      }else{
+      if (post.isVisitorOwner) {
+        await postsCollection.deleteOne({_id: new ObjectID(postIdToDelete)})
+        resolve()
+      } else {
         reject()
-      }
-    }catch{
+      }    
+    } catch {
       reject()
     }
   })
