@@ -8,9 +8,11 @@
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
+    "marked": "^3.0.7",
     "md5": "^2.3.0",
     "mongo": "^0.1.0",
     "nodemon": "^2.0.13",
+    "sanitize-html": "^2.5.2",
     "validator": "^13.6.0"
   },
   "name": "app",

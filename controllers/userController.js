@@ -58,7 +58,7 @@ exports.home = function(req, res) {
     res.render('home-dashboard')
     //when user is not log in, flash tie errory z db automaticky vymaze po pouziti
   } else {
-    res.render('home-guest', {errors: req.flash('errors'), regErrors: req.flash('regErrors')})
+    res.render('home-guest', { regErrors: req.flash('regErrors')})
   }
 }
 
