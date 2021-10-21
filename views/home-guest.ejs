@@ -1,10 +1,9 @@
-<%- include('includes/header')%>
-<!-- header ends here -->
+<%- include('includes/header') %>
 
 <div class="container py-md-5">
-  <% errors.forEach(function(message){  %>
-    <div class="elert alert-danger text-center py-3"><%= message %></div>
-    <% }) %>
+
+  <%- include('includes/flash') %>
+
   <div class="row align-items-center">
     <div class="col-lg-7 py-3 py-md-5">
       <h1 class="display-3">Remember Writing?</h1>      
@@ -12,11 +11,12 @@
     </div>
     <div class="col-lg-5 pl-lg-5 pb-3 py-lg-5">
       <form action="/register" method="POST" id="registration-form">
-        
-        <%- include('includes/flash')%>
-        <!--error or success messages-->
-          
-        <div class="form-group">
+
+        <% regErrors.forEach(function(message) { %>
+          <div class="alert alert-danger small"><%= message %></div>
+        <% }) %>
+
+          <div class="form-group">
             <label for="username-register" class="text-muted mb-1"><small>Username</small></label>
             <input name="username" id="username-register" class="form-control" type="text" placeholder="Pick a username" autocomplete="off">
           </div>
@@ -38,5 +38,4 @@
     </div>
   </div>
   
-<!-- footer begins -->
-<%- include('includes/footer')%>
+<%- include('includes/footer') %>

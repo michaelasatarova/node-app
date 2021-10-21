@@ -52,8 +52,8 @@ User.prototype.validate = function() {
 User.prototype.login = function() {
   return new Promise((resolve, reject) => {
     this.cleanUp()
+    // compare sync je metoda ktora ti umozni porovnat napr zahashovany password 
     usersCollection.findOne({username: this.data.username}).then((attemptedUser) => {
-        // compare sync je metoda ktora ti umozni porovnat napr zahashovany password 
       if (attemptedUser && bcrypt.compareSync(this.data.password, attemptedUser.password)) {
         this.data = attemptedUser
         this.getAvatar()
@@ -62,7 +62,7 @@ User.prototype.login = function() {
         reject("Invalid username / password.")
       }
     }).catch(function() {
-      reject("Please try again later")
+      reject("Please try again later.")
     })
   })
 }

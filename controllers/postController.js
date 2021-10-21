@@ -11,8 +11,7 @@ exports.create = function(req, res) {
   post.create().then(function(newId) {
     /* console.log(newId) */
     req.flash("success", "New post successfully created.")
-    req.session.save(() => res.redirect(`./`))
-    
+    req.session.save(() => res.redirect(`/post/${newId}`))
   }).catch(function(errors) {
     errors.forEach(error => req.flash("errors", error))
     req.session.save(() => res.redirect("/create-post"))
@@ -74,13 +73,13 @@ exports.edit = function(req, res) {
   })
 }
 
-exports.delete = function(req, res){
-  Post.delete(req.params.id, req.visitorId).then(() =>{
-    req.flash("success", "Post sucessfully deleted")
-    req.session.save(()=> {res.redirect(`/profile/${req.session.user.username}`)})
-  }).catch(()=>{
-    req.flash("errors", "You don't have permission")
-    req.session.save(() =>{res.redirect('./')})
+exports.delete = function(req, res) {
+  Post.delete(req.params.id, req.visitorId).then(() => {
+    req.flash("success", "Post successfully deleted.")
+    req.session.save(() => res.redirect(`/profile/${req.session.user.username}`))
+  }).catch(() => {
+    req.flash("errors", "You do not have permission to perform that action.")
+    req.session.save(() => res.redirect("/"))
   })
 }
 
